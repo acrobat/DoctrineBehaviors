@@ -1,27 +1,56 @@
 name: Code Tests
 
-on:
-    pull_request: null
+on: [push, pull_request]
 
 jobs:
     tests:
         strategy:
             matrix:
-                php:
-                    - 8.0
+                php: ['8.0', '8.1', '8.2', '8.3', '8.4']
+                symfony: [ '' ] # Don't lock to a specific symfony version by default
+                include:
+                    # Test lowest dependencies
+                    -   deps: 'lowest'
+                        php: '8.0'
 
-        name: Test ${{ matrix.php }}
+                    # Test latest php with LTS versions.
+                    -   deps: 'lts'
+                        php: '8.4'
+                        symfony: '^5.4'
+
+                    # Test latest php with LTS versions.
+                    -   deps: 'lts'
+                        php: '8.4'
+                        symfony: '^6.4'
+
+        name: 'Test ${{ matrix.deps }} | PHP ${{ matrix.php }} | Symfony ${{ matrix.symfony }}'
         runs-on: ubuntu-latest
 
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v4
 
-            -   uses: shivammathur/setup-php@v1
+            -   name: Set-up env variables
+                run: |
+                    case "${{ matrix.deps }}" in
+                     "lowest")
+                       echo "COMPOSER_FLAGS=--prefer-lowest" >> $GITHUB_ENV
+                       echo "SYMFONY_REQUIRE=$(echo '${{ matrix.symfony }}')" >> $GITHUB_ENV
+                       ;;
+                     *)
+                       echo "SYMFONY_REQUIRE=$(echo '${{ matrix.symfony }}')" >> $GITHUB_ENV
+                    esac
+
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php }}
                     extensions: pdo_sqlite, pdo_mysql, pdo_pgsql
+                    tools: flex
                     coverage: none
 
-            -   run: composer install --no-progress
+            -   name: Install Composer Dependencies
+                run: composer update --prefer-dist --no-progress $COMPOSER_FLAGS
 
-            -   run: vendor/bin/phpunit
+            -   name: Run phpunit
+                run: vendor/bin/phpunit
