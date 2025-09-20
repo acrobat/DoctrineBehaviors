@@ -1,12 +1,8 @@
 includes:
     - phpstan-extension.neon
+    - phpstan-baseline.neon
 
-    - vendor/symplify/phpstan-rules/config/static-rules.neon
-    - vendor/symplify/phpstan-rules/config/array-rules.neon
     - vendor/symplify/phpstan-rules/config/doctrine-rules.neon
-    - vendor/symplify/phpstan-rules/config/regex-rules.neon
-    - vendor/symplify/phpstan-rules/config/forbidden-static-rules.neon
-    - vendor/symplify/phpstan-rules/config/test-rules.neon
 
 parameters:
     paths:
@@ -41,6 +37,15 @@ parameters:
 
         # tests
         - '#Offset 0 does not exist on array<Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\>\|ArrayAccess\|null#'
+        -
+            identifier: doctrine.noGetRepositoryOutsideService
+            path: tests/
+        -
+            identifier: doctrine.columnType
+            path: tests/
+        -
+            identifier: doctrine.noParentRepository
+            path: tests/
 
         - '#Cannot call method addChildNode\(\) on Knp\\DoctrineBehaviors\\Contract\\Entity\\TreeNodeInterface\|null#'
 
@@ -124,6 +129,10 @@ parameters:
 
         # specific implementation
         - '#Property Knp\\DoctrineBehaviors\\Tests\\ORM\\Blameable\\BlameableTest\:\:\$userProvider \(Knp\\DoctrineBehaviors\\Tests\\Provider\\EntityUserProvider\) does not accept Knp\\DoctrineBehaviors\\Contract\\Provider\\UserProviderInterface#'
+
+        -
+            identifier: doctrine.requireQueryBuilderOnRepository
+            path: src/Repository/DefaultSluggableRepository.php
 
         # different entity can return differnt types - reusable trait
         -

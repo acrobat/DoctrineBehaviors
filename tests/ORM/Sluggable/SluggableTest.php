@@ -45,7 +45,7 @@ final class SluggableTest extends AbstractBehaviorTestCase
     }
 
     /**
-     * @dataProvider provideDataForTest()
+     * @dataProvider provideDataForTest
      */
     public function testNotUpdatedSlug(string $value, string $expectedSlug): void
     {
