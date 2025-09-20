@@ -64,7 +64,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
         /** @var BlameableEntity $entity */
         $entity = $this->blameableRepository->find($id);
 
-        $debugStack = $this->createAndRegisterDebugStack();
+        $debugStack = $this->getAndResetDebugStack();
 
         // need to modify at least one column to trigger onUpdate
         $entity->setTitle('test');
@@ -127,7 +127,7 @@ final class BlameableTest extends AbstractBehaviorTestCase
     {
         $blameableEntity = new BlameableEntity();
 
-        $stackLogger = $this->createAndRegisterDebugStack();
+        $stackLogger = $this->getAndResetDebugStack();
 
         $this->entityManager->persist($blameableEntity);
         $this->entityManager->flush();
