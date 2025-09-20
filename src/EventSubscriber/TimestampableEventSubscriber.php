@@ -7,7 +7,6 @@ namespace Knp\DoctrineBehaviors\EventSubscriber;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 
 #[AsDoctrineListener(event: Events::loadClassMetadata)]
@@ -46,9 +45,5 @@ final class TimestampableEventSubscriber
                 ]);
             }
         }
-    }
-
-    public function prePersist(LifecycleEventArgs $lifecycleEventArgs): void
-    {
     }
 }

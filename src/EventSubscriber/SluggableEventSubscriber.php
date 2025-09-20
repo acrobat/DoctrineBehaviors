@@ -53,13 +53,13 @@ final class SluggableEventSubscriber
         $this->processLifecycleEventArgs($lifecycleEventArgs);
     }
 
-    private function shouldSkip(ClassMetadata $classMetadataInfo): bool
+    private function shouldSkip(ClassMetadata $classMetadata): bool
     {
-        if (! is_a($classMetadataInfo->getName(), SluggableInterface::class, true)) {
+        if (! is_a($classMetadata->getName(), SluggableInterface::class, true)) {
             return true;
         }
 
-        return $classMetadataInfo->hasField(self::SLUG);
+        return $classMetadata->hasField(self::SLUG);
     }
 
     private function processLifecycleEventArgs(LifecycleEventArgs $lifecycleEventArgs): void

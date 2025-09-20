@@ -12,8 +12,6 @@ use Knp\DoctrineBehaviors\Tests\Utils\Doctrine\DebugStack;
  */
 final class Connection extends AbstractConnectionMiddleware
 {
-    private int $nestingLevel = 0;
-
     public function __construct(
         ConnectionInterface $connection,
         private DebugStack $debugStack,

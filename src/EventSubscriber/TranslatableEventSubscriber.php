@@ -92,19 +92,19 @@ final class TranslatableEventSubscriber
         return ClassMetadata::FETCH_LAZY;
     }
 
-    private function mapTranslatable(ClassMetadata $classMetadataInfo): void
+    private function mapTranslatable(ClassMetadata $classMetadata): void
     {
-        if ($classMetadataInfo->hasAssociation('translations')) {
+        if ($classMetadata->hasAssociation('translations')) {
             return;
         }
 
-        $classMetadataInfo->mapOneToMany([
+        $classMetadata->mapOneToMany([
             'fieldName' => 'translations',
             'mappedBy' => 'translatable',
             'indexBy' => self::LOCALE,
             'cascade' => ['persist', 'remove'],
             'fetch' => $this->translatableFetchMode,
-            'targetEntity' => $classMetadataInfo->getReflectionClass()
+            'targetEntity' => $classMetadata->getReflectionClass()
                 ->getMethod('getTranslationEntityClass')
                 ->invoke(null),
             'orphanRemoval' => true,
@@ -172,8 +172,8 @@ final class TranslatableEventSubscriber
         }
     }
 
-    private function hasUniqueTranslationConstraint(ClassMetadata $classMetadataInfo, string $name): bool
+    private function hasUniqueTranslationConstraint(ClassMetadata $classMetadata, string $name): bool
     {
-        return isset($classMetadataInfo->table['uniqueConstraints'][$name]);
+        return isset($classMetadata->table['uniqueConstraints'][$name]);
     }
 }
