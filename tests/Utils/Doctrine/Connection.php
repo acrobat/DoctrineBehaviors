@@ -34,7 +34,7 @@ final class Connection extends AbstractConnectionMiddleware
         }
     }
 
-    public function exec(string $sql): int
+    public function exec(string $sql): int|string
     {
         $this->debugStack->startQuery($sql);
 

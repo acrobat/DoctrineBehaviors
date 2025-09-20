@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Knp\DoctrineBehaviors\EventSubscriber;
 
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Knp\DoctrineBehaviors\Contract\Entity\LoggableInterface;
@@ -59,6 +60,7 @@ final class LoggableEventSubscriber
     private function logChangeSet(LifecycleEventArgs $lifecycleEventArgs): void
     {
         $entityManager = $lifecycleEventArgs->getObjectManager();
+        assert($entityManager instanceof EntityManagerInterface);
         $unitOfWork = $entityManager->getUnitOfWork();
         $entity = $lifecycleEventArgs->getObject();
 

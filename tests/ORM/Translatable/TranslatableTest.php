@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Knp\DoctrineBehaviors\Tests\ORM\Translatable;
 
+use Doctrine\ORM\Mapping\AssociationMapping;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectRepository;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
@@ -409,9 +410,11 @@ final class TranslatableTest extends AbstractBehaviorTestCase
 
         $this->assertTrue($translatableClassMetadata->isAssociationInverseSide('translations'));
 
+        $associationMapping = $translatableClassMetadata->getAssociationMapping('translations');
+
         $this->assertSame(
             ClassMetadata::ONE_TO_MANY,
-            $translatableClassMetadata->getAssociationMapping('translations')['type']
+            $associationMapping instanceof AssociationMapping ? $associationMapping->type() : $associationMapping['type']
         );
     }
 }
