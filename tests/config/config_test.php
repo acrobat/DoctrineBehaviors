@@ -8,9 +8,11 @@ use Knp\DoctrineBehaviors\EventSubscriber\LoggableEventSubscriber;
 use Knp\DoctrineBehaviors\Tests\DatabaseLoader;
 use Knp\DoctrineBehaviors\Tests\Provider\TestLocaleProvider;
 use Knp\DoctrineBehaviors\Tests\Provider\TestUserProvider;
+use Knp\DoctrineBehaviors\Tests\Utils\Doctrine\DebugMiddleware;
+use Knp\DoctrineBehaviors\Tests\Utils\Doctrine\DebugStack;
 use Psr\Log\Test\TestLogger;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\Security\Core\Security;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -47,6 +49,13 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set(LoggableEventSubscriber::class)
         ->arg('$logger', service(TestLogger::class));
+
+    $services->set(DebugStack::class)
+        ->public();
+    $services->set(DebugMiddleware::class)
+        ->args([service(DebugStack::class)])
+        ->tag('doctrine.middleware')
+    ;
 
     $containerConfigurator->extension('doctrine', [
         'dbal' => [
